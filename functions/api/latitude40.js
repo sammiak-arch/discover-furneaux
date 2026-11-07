@@ -1,5 +1,5 @@
 
-const FEED = 'https://feeds.buzzsprout.com/1538629.rss';
+const FEED = 'https://rss.buzzsprout.com/1538629.rss';
 
 function extract(xml, tag) {
   const escaped = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
