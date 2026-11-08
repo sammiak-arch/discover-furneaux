@@ -189,7 +189,7 @@ async function route({request,env}){
    for(const r of (Array.isArray(entries)?entries:[entries])){
     if(!r.start&&!r.end)continue;
 
-    if(!validTime(r.start)||!validTime(r.end)||r.start>=r.end)
+    if(!validTime(r.start)||!(validTime(r.end)||r.end==='24:00')||r.start>=r.end)
      return fail('Invalid opening session');
 
     sessions.push({
