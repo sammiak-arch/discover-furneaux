@@ -424,7 +424,7 @@ async function loadPreviewListings(){
    ...x,
    kind:x.category||'',
    status:'Published',
-   extra:x.contact||'',
+   extra:x.extra||'',
    source:'Discover Furneaux',
    gallery:Array.isArray(x.gallery)?x.gallery:[]
   }));
