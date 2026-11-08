@@ -1,1 +1,3 @@
 Discover Furneaux Latitude 40 update. The compact player and in-page episode details work in index.html. To show ALL current episodes automatically, deploy functions/api/latitude40.js using Cloudflare Pages Git integration or Wrangler; direct ZIP uploads do NOT deploy Pages Functions. Until then, the four bundled featured episodes remain visible. Audio is hosted by Buzzsprout.
+
+Trigger preview deployment
