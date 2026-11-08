@@ -98,6 +98,35 @@ async function route({request,env}){
   await env.DB.batch(statements);
   return json({ok:true,id});
  }
+
+ if(path==='/api/admin/media'&&request.method==='GET'){
+  if(!env.MEDIA_LIBRARY)return fail('Media Library binding missing',503);
+
+  const prefix='listings/';
+  const limit=60;
+  const cursor=new URL(request.url).searchParams.get('cursor')||undefined;
+
+  const result=await env.MEDIA_LIBRARY.list({
+   prefix,
+   limit,
+   ...(cursor?{cursor}:{})
+  });
+
+  const base='https://pub-2a26cdacb48143ad82a5270167809ed0.r2.dev';
+
+  const images=(result.objects||[])
+   .filter(obj=>/\.(jpg|jpeg|png|webp|avif)$/i.test(obj.key))
+   .map(obj=>({
+    key:obj.key,
+    url:base+'/'+obj.key,
+    size:obj.size
+   }));
+
+  return json({
+   images,
+   cursor:result.truncated?result.cursor:null
+  });
+ }
  if(path==='/api/admin/images'&&request.method==='POST'){
   if(!env.IMAGES||!env.PUBLIC_IMAGE_BASE)return fail('R2 binding or public image base missing',503);
   const form=await request.formData(),file=form.get('file');
