@@ -142,7 +142,7 @@ async function route({request,env}){
   if(!['draft','published'].includes(x.status))
    return fail('Invalid status');
 
-  if(!['unknown','appointment','scheduled'].includes(x.mode))
+  if(!['not_applicable','unknown','appointment','scheduled'].includes(x.mode))
    return fail('Invalid hours mode');
 
   const cat=await env.DB.prepare(
