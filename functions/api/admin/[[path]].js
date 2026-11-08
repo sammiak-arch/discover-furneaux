@@ -109,6 +109,7 @@ async function route({request,env}){
     name:x.name,
     category:catMap.get(x.category_id)||'',
     desc:x.description||'',
+    extra:x.extra||'',
     address:x.address||'',
     contact:x.contact_person||'',
     phone:x.phone||'',
@@ -233,6 +234,7 @@ async function route({request,env}){
    x.name.trim(),
    cat.id,
    x.desc||'',
+   x.extra||'',
    x.address||'',
    lat,
    lng,
@@ -259,7 +261,7 @@ async function route({request,env}){
 
    await env.DB.prepare(
     `UPDATE listings SET
-     name=?,category_id=?,description=?,address=?,
+     name=?,category_id=?,description=?,extra=?,address=?,
      latitude=?,longitude=?,phone=?,email=?,website=?,
      facebook=?,instagram=?,opening_hours=?,hero_image=?,
      gallery=?,status=?,contact_person=?,
@@ -269,10 +271,10 @@ async function route({request,env}){
   }else{
    const result=await env.DB.prepare(
     `INSERT INTO listings (
-     name,category_id,description,address,latitude,longitude,
+     name,category_id,description,extra,address,latitude,longitude,
      phone,email,website,facebook,instagram,opening_hours,
      hero_image,gallery,status,contact_person,slug
-    ) VALUES (${Array(17).fill('?').join(',')})`
+    ) VALUES (${Array(18).fill('?').join(',')})`
    ).bind(
     ...fields,
     slug+'-'+crypto.randomUUID().slice(0,8)
