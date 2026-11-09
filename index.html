@@ -258,7 +258,12 @@ const visible=()=>records.filter(r=>r.status==='Published'&&(category==='All'||r
 function listingHoursHtml(r){
  const mode=r.mode||'unknown';
  if(mode==='not_applicable')return '';
- if(mode==='appointment')return '<div class="detail-fact"><strong>Opening hours</strong><div class="detail-hours">By appointment'+(r.seasonal?'<p class="muted">'+esc(r.seasonal)+'</p>':'')+'</div></div>';
+ if(mode==='appointment'){
+  const exceptions=(Array.isArray(r.exceptions)?r.exceptions:[]).filter(e=>e.date>=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Hobart',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replace(/\//g,'-')).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
+  const fmt=t=>{const [h,m]=String(t||'').split(':').map(Number);return Number.isFinite(h)&&Number.isFinite(m)?(h%12||12)+(m?':'+String(m).padStart(2,'0'):'')+(h<12?' am':' pm'):'';};
+  const special=exceptions.length?'<div class="df-hours-special"><strong>Special dates</strong>'+exceptions.map(e=>'<div>'+esc(e.date)+' — '+(e.closed?'Unavailable':(e.start&&e.end?esc(fmt(e.start)+' – '+fmt(e.end)):'By appointment'))+(e.note?' · '+esc(e.note):'')+'</div>').join('')+'</div>':'';
+  return '<div class="detail-fact"><strong>Opening hours</strong><div class="detail-hours">By appointment'+special+(r.seasonal?'<p class="muted">'+esc(r.seasonal)+'</p>':'')+'</div></div>';
+ }
  if(mode!=='scheduled')return '<div class="detail-fact"><strong>Opening hours (unconfirmed)</strong><div class="detail-hours">'+(r.hours?'<p>'+esc(r.hours)+'</p>':'Hours not confirmed')+(r.seasonal?'<p class="muted">'+esc(r.seasonal)+'</p>':'')+'</div></div>';
  const names=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
  const displayOrder=[1,2,3,4,5,6,0];
