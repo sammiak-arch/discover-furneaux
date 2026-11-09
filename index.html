@@ -525,6 +525,9 @@ async function loadPreviewListings(){
    gallery:Array.isArray(x.gallery)?x.gallery:[]
   }));
   reshuffleListings();
+  const requestedId=new URLSearchParams(window.location.search).get('listing');
+  const requested= requestedId && records.find(r=>String(r.id)===requestedId && r.status==='Published');
+  if(requested){selected=requested.id;section='Directory';}
   render();
  }catch(error){
   console.error('Preview listings failed:',error);
