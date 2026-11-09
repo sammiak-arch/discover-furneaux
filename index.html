@@ -264,7 +264,7 @@ function listingHoursHtml(r){
   const raw=r.week?.[i]||[];
   const sessions=Array.isArray(raw)?raw:(raw.start&&raw.end?[raw]:[]);
   const hours=sessions.length?sessions.map(t=>t.start==='00:00'&&t.end==='24:00'?'Open 24 hours':fmt(t.start)+' – '+fmt(t.end)).join(' · '):'Closed';
-  return '<div class="df-hours-day"><span>'+name+'</span><span>'+esc(hours)+'</span></div>';
+  return '<div class="df-hours-day"><span>'+(sessions.length?'<strong>'+name+'</strong>':name)+'</span><span>'+esc(hours)+'</span></div>';
  });
  const allDay=names.every((_,i)=>{const raw=r.week?.[i]||[];const a=Array.isArray(raw)?raw:(raw.start&&raw.end?[raw]:[]);return a.length===1&&a[0].start==='00:00'&&a[0].end==='24:00';});
  const exceptions=(Array.isArray(r.exceptions)?r.exceptions:[]).filter(e=>e.date>=new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Hobart',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replace(/\//g,'-')).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
