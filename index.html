@@ -54,6 +54,10 @@ header .brand-lockup{gap:0}header .header-tagline{font-family:'Montserrat',sans-
 .df-hours-accordion[open] summary .df-hours-chevron{transform:rotate(180deg)}
 .df-hours-accordion .detail-hours{padding-top:12px}
 .df-hours-accordion summary:focus-visible{outline:2px solid #9DBB7A;outline-offset:4px;border-radius:3px}
+
+/* Emphasise the opening-hours heading in contact details */
+.detail-fact:has(> .detail-hours) > strong,
+.df-hours-accordion > summary > strong{font-size:16px;font-weight:700;line-height:1.35;color:#263e31;margin-bottom:5px}
 </style><style id="collective-brand-theme">
 :root{--green:#000000;--sand:#f8f8f5;--ink:#000000;--muted:#4e554b;--line:#dce4d4;--sage:#9DBB7A}
 body{background:var(--sand);color:var(--ink)}
