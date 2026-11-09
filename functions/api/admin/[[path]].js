@@ -109,7 +109,7 @@ async function route({request,env}){
     name:x.name,
     category:catMap.get(x.category_id)||'',
     desc:x.description||'',
-    extra:x.extra||'',
+    extra:x.extra||'',essentials:(()=>{try{const v=JSON.parse(x.essentials||"[]");return Array.isArray(v)?v:[]}catch{return []}})(),
     address:x.address||'',
     contact:x.contact_person||'',
     phone:x.phone||'',
@@ -168,6 +168,8 @@ async function route({request,env}){
   )return fail('Invalid map coordinates');
 
   const gallery=Array.isArray(x.gallery)?x.gallery:[];
+  const allowedEssentials=["Getting Here & Around", "Health & Emergency", "Fuel & Supplies", "Waste & Recycling", "Connectivity", "Caring for the Islands"];
+  if(!Array.isArray(x.essentials)||x.essentials.length>6||x.essentials.some(t=>!allowedEssentials.includes(t)))return fail('Invalid Island Essentials selection');
 
   if(
    gallery.length>20||
@@ -247,7 +249,8 @@ async function route({request,env}){
    x.image||'',
    JSON.stringify(gallery),
    x.status,
-   x.contact||''
+   x.contact||'',
+   JSON.stringify(x.essentials)
   ];
 
   let id=Number(x.id)||null;
@@ -264,7 +267,7 @@ async function route({request,env}){
      name=?,category_id=?,description=?,extra=?,address=?,
      latitude=?,longitude=?,phone=?,email=?,website=?,
      facebook=?,instagram=?,opening_hours=?,hero_image=?,
-     gallery=?,status=?,contact_person=?,
+     gallery=?,status=?,contact_person=?,essentials=?,
      updated_at=CURRENT_TIMESTAMP WHERE id=?`
    ).bind(...fields,id).run();
 
@@ -273,8 +276,8 @@ async function route({request,env}){
     `INSERT INTO listings (
      name,category_id,description,extra,address,latitude,longitude,
      phone,email,website,facebook,instagram,opening_hours,
-     hero_image,gallery,status,contact_person,slug
-    ) VALUES (${Array(18).fill('?').join(',')})`
+     hero_image,gallery,status,contact_person,essentials,slug
+    ) VALUES (${Array(19).fill('?').join(',')})`
    ).bind(
     ...fields,
     slug+'-'+crypto.randomUUID().slice(0,8)
