@@ -16,7 +16,7 @@ export async function onRequestGet({env}) {
    const week={};for(const r of sessionsData.results||[]){if(r.listing_id===x.id)(week[r.weekday]??=[]).push({start:r.opens_at,end:r.closes_at});}
    const exceptions=(exceptionsData.results||[]).filter(r=>r.listing_id===x.id).map(r=>({date:r.local_date,closed:!!r.is_closed,start:r.opens_at||"",end:r.closes_at||"",note:r.note||""}));
    const hs=(settingsData.results||[]).find(r=>r.listing_id===x.id);
-   return {id:x.id,name:x.name,category:categoryNames.get(x.category_id)||"",desc:x.description||"",extra:x.extra||"",address:x.address||"",contact:x.contact_person||"",phone:x.phone||"",email:x.email||"",website:x.website||"",facebook:x.facebook||"",instagram:x.instagram||"",image:x.hero_image||"",gallery,latitude:x.latitude,longitude:x.longitude,hours:x.opening_hours||"",status:x.status,mode:hs?.mode||"unknown",seasonal:hs?.seasonal_note||"",week,exceptions};
+   return {id:x.id,name:x.name,category:categoryNames.get(x.category_id)||"",desc:x.description||"",extra:x.extra||"",essentials:(()=>{try{const v=JSON.parse(x.essentials||"[]");return Array.isArray(v)?v:[]}catch{return []}})(),address:x.address||"",contact:x.contact_person||"",phone:x.phone||"",email:x.email||"",website:x.website||"",facebook:x.facebook||"",instagram:x.instagram||"",image:x.hero_image||"",gallery,latitude:x.latitude,longitude:x.longitude,hours:x.opening_hours||"",status:x.status,mode:hs?.mode||"unknown",seasonal:hs?.seasonal_note||"",week,exceptions};
   });
   return json({listings,categories:categories.map(c=>({id:c.id,name:c.name}))});
  }catch(error){console.error("Public listings API error",error);return json({error:"Unable to load listings"},500);}
